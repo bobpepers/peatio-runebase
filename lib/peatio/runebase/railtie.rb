@@ -1,5 +1,5 @@
 module Peatio
-  module Litecoin
+  module Runebase
     class Railtie < Rails::Railtie
       config.before_initialize do
         Hooks.check_compatibility

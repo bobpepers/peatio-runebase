@@ -1,5 +1,5 @@
 module Peatio
-  module Litecoin
+  module Runebase
     class Wallet < Peatio::Wallet::Abstract
 
       def initialize(settings = {})
@@ -23,7 +23,7 @@ module Peatio
 
       def create_address!(_options = {})
         { address: client.json_rpc(:getnewaddress) }
-      rescue Litecoin::Client::Error => e
+      rescue Runebase::Client::Error => e
         raise Peatio::Wallet::ClientError, e
       end
 
@@ -38,14 +38,14 @@ module Peatio
                                ])
         transaction.hash = txid
         transaction
-      rescue Litecoin::Client::Error => e
+      rescue Runebase::Client::Error => e
         raise Peatio::Wallet::ClientError, e
       end
 
       def load_balance!
         client.json_rpc(:getbalance).to_d
 
-      rescue Litecoin::Client::Error => e
+      rescue Runebase::Client::Error => e
         raise Peatio::Wallet::ClientError, e
       end
 
@@ -53,7 +53,7 @@ module Peatio
 
       def client
         uri = @wallet.fetch(:uri) { raise Peatio::Wallet::MissingSettingError, :uri }
-        @client ||= Client.new(uri)
+        @client ||= Client.new(uri, idle_timeout: 1)
       end
     end
   end
